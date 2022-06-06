@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'telegram-bot-api' => [
+        'token' => env('TELEGRAM_BOT_TOKEN', '5428673398:AAGB-9oDxU41kaT8rwLZ6q5BOmN2HxZjMEA')
+    ],
+
 ];

@@ -41,4 +41,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function userChannels(){
+        return $this->hasMany( 'App\Models\UserTelegramChannels', 'user_id','id');
+    }
+    public function syncTelegramChannels(){
+        return $this->hasMany( 'App\Models\SyncUserTelegramChannels', 'user_id','id');
+    }
+
+    public function isAdmin(){
+        return $this->role_id == 1 ? true : false;
+    }
 }
