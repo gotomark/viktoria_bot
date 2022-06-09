@@ -53,7 +53,7 @@ class HomeController extends Controller
 
         $telegram = new Telegram($user->telegram_token);
         $telegram->setMethod('setWebhook');
-        $telegram->setParams(['url'=>'https://bot.work-trips.com/user/'.$user->id]);
+        $telegram->setParams(['url'=>env('APP_URL').'/user/'.$user->id]);
 
         $telegram->query();
 
