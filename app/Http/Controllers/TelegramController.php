@@ -34,7 +34,7 @@ class TelegramController extends Controller
            'json_data'=>json_encode(request()->all())
        ]);
 
-       if(isset($req['channel_post']['text'])){
+      /* if(isset($req['channel_post']['text'])){
            Log::info('TYPE TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$req['channel_post']['chat']['id']);
 
            $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
@@ -52,7 +52,7 @@ class TelegramController extends Controller
 
            return response(200);
        }
-
+*/
        if(isset($req['channel_post']['photo']) && !isset($req['channel_post']['media_group_id'])){
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
