@@ -27,7 +27,8 @@ class TelegramController extends Controller
 
    public function hook(){
        $req = request()->all();
-
+       Log::info('----MAIN BOT----');
+       Log::info($req);
        WebHookHistory::create(
        [
            'json_data'=>json_encode(request()->all())
