@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'test',
-        'user/*'
+        'user/*',
+        'hook-main-bot'
     ];
 }
