@@ -14,7 +14,7 @@ use App\Models\WebHookUserHistory;
 use App\Models\UserTelegramChannels;
 use App\Models\TelegramChannels;
 use Log;
-
+use Carbon\Carbon;
 class TelegramController extends Controller
 {
    public function test(){
@@ -138,7 +138,7 @@ class TelegramController extends Controller
                            'channel_id'=>$userChannel->channel_id,
                        ]);
 
-                       dispatch(new PhotoGroup($tmpGroup));
+                       dispatch(new PhotoGroup($tmpGroup))->delay(Carbon::now()->addSeconds(10));
                    }
                }
            }
