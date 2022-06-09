@@ -57,7 +57,7 @@ class TelegramController extends Controller
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
            $telegram->setMethod('getFile');
-           $telegram->setParams(['file_id'=>$req['channel_post']['photo'][3]['file_id']]);
+           $telegram->setParams(['file_id'=>isset($req['channel_post']['photo'][3]['file_id']) ? $req['channel_post']['photo'][3]['file_id']:$req['channel_post']['photo'][2]['file_id']]);
 
            $filePath = json_decode($telegram->getPathPhoto());
 
@@ -103,7 +103,7 @@ class TelegramController extends Controller
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
            $telegram->setMethod('getFile');
-           $telegram->setParams(['file_id'=>$req['channel_post']['photo'][3]['file_id']]);
+           $telegram->setParams(['file_id'=>>isset($req['channel_post']['photo'][3]['file_id']) ? $req['channel_post']['photo'][3]['file_id']:$req['channel_post']['photo'][2]['file_id']]);
            $filePath = json_decode($telegram->getPathPhoto());
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
