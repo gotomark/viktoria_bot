@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Photo;
 use App\Jobs\PhotoGroup;
+use App\Jobs\Video;
 use App\Models\SyncUserTelegramChannels;
 use App\Models\TmpPhotoGroup;
 use App\Models\User;
@@ -22,7 +23,22 @@ class TelegramController extends Controller
 
    }
    public function index(){
-       Log::info(request()->all());
+       $user = User::find(1);
+       $mediaGroup = TmpPhotoGroup::find(51);
+       $telegram = new Telegram($user->telegram_token);
+       $telegram->setMethod('sendVideo');
+       $telegram->setCaption($mediaGroup->caption);
+       $telegram->setChatId($mediaGroup->channel_id);
+       $telegram->setParams(['chat_id'=>$mediaGroup->channel_id]);
+       $telegram->setVideo(env('APP_URL').'/storage/'.$mediaGroup->media_group_id);
+
+       $telegram->sendVideo();
+
+       $mediaGroup->delete();
+
+       if(TmpPhotoGroup::where('media_group_id',$mediaGroup->media_group_id)->count() == 0 ){
+           unlink(storage_path() . '/app/public/' .$mediaGroup->media_group_id);
+       }
    }
 
    public function hook(){
@@ -34,7 +50,7 @@ class TelegramController extends Controller
            'json_data'=>json_encode(request()->all())
        ]);
 
-      /* if(isset($req['channel_post']['text'])){
+       /* if(isset($req['channel_post']['text'])){
            Log::info('TYPE TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$req['channel_post']['chat']['id']);
 
            $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
@@ -51,8 +67,54 @@ class TelegramController extends Controller
            }
 
            return response(200);
+        }
+        */
+       if(isset($req['channel_post']['video'])){
+
+           $telegram = new Telegram(config('services.telegram-bot-api.token'));
+           $telegram->setMethod('getFile');
+           $telegram->setParams(['file_id'=>$req['channel_post']['video']['file_id']]);
+
+           $filePath = json_decode($telegram->getPathPhoto());
+
+           $telegram = new Telegram(config('services.telegram-bot-api.token'));
+
+           $videoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
+
+           $name = rand(0,100000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
+           $localPath = storage_path().'/app/public/'.$name;
+           file_put_contents($localPath, file_get_contents($videoUrl));
+
+           $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
+           $caption = '';
+           if(isset($req['channel_post']['caption'])){
+               $caption = $req['channel_post']['caption'];
+           }
+           foreach($channel->userSyncChannels as $channel) {
+
+               foreach ($channel->userChannel as $userChannel) {
+
+                   $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                       ->whereMediaGroupId($name)
+                       ->whereChannelId($userChannel->channel_id)
+                       ->get();
+
+                   if($item->count() == 0){
+                       $tmpGroup = TmpPhotoGroup::create([
+                           'user_id'=>$userChannel->user->id,
+                           'media_group_id'=>$name,
+                           'channel_id'=>$userChannel->channel_id,
+                           'caption'=>$caption
+                       ]);
+
+                       dispatch(new Video($tmpGroup));
+                   }
+               }
+           }
+
+           return response(200);
        }
-*/
+
        if(isset($req['channel_post']['photo']) && !isset($req['channel_post']['media_group_id'])){
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
@@ -96,7 +158,6 @@ class TelegramController extends Controller
            }
 
            return response(200);
-
        }
 
        if(isset($req['channel_post']['photo']) && isset($req['channel_post']['media_group_id'])){
