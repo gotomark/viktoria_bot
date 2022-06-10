@@ -5,10 +5,9 @@ namespace App\Classes;
 class Telegram{
     public $token;
     public $chatId;
-    public $fileId;
     public $photo;
+    public $video;
     public $photoGroup;
-    public $text;
     public $caption;
     public $baseUrl = "https://api.telegram.org/bot";
     public $baseFileUrl = "https://api.telegram.org/file/bot";
@@ -29,6 +28,10 @@ class Telegram{
 
     public function setPhoto($photo){
         $this->photo = $photo;
+    }
+
+    public function setVideo($video){
+        $this->video = $video;
     }
 
     public function setPhotoGroup($photoGroup){
@@ -82,6 +85,33 @@ class Telegram{
         return $result;
 
 
+    }
+
+    public function sendVideo()
+    {
+
+        $this->baseFullUrl .= "/" . $this->method;
+
+        if (!empty($this->params)) {
+            $this->baseFullUrl .= "?" . http_build_query($this->params);
+        }
+
+        $post_fields = array(
+            'chat_id' => $this->chatId,
+            'caption' => $this->caption,
+            'video' => $this->video
+        );
+
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type:multipart/form-data"
+        ));
+        curl_setopt($ch, CURLOPT_URL, $this->baseFullUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        $output = curl_exec($ch);
+        return $output;
     }
 
     public function sendImage()
