@@ -43,8 +43,8 @@ class TelegramController extends Controller
 
    public function hook(){
        $req = request()->all();
-       Log::info('----MAIN BOT----');
-       Log::info($req);
+       //Log::info('----MAIN BOT----');
+       //Log::info($req);
        WebHookHistory::create(
        [
            'json_data'=>json_encode(request()->all())
@@ -78,8 +78,13 @@ class TelegramController extends Controller
            $filePath = json_decode($telegram->getPathPhoto());
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
+           if(isset($filePath->result->file_path)){
+                $videoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
+           }else{
+               Log::info($filePath);
+               exit;
+           }
 
-           $videoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
 
            $name = rand(0,100000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
            $localPath = storage_path().'/app/public/'.$name;
