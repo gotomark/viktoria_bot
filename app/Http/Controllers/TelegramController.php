@@ -301,7 +301,7 @@ class TelegramController extends Controller
                            'caption'=>''
                        ]);
 
-                       dispatch(new PhotoVK($tmpGroup));
+                       dispatch(new PhotoVK($tmpGroup))->delay(Carbon::now()->addSeconds(10));
                    }
                }
            }
