@@ -21,6 +21,10 @@ class TelegramChannels extends Model
 
         return $this->hasMany( 'App\Models\SyncUserTelegramChannels', 'telegram_channel_id','id');
     }
+    public function userSyncAlbums(){
+
+        return $this->hasMany( 'App\Models\SyncUserVkontakteAlbumChannels', 'telegram_channel_id','id');
+    }
 
 
 }

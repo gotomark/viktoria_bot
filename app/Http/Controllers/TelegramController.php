@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Photo;
 use App\Jobs\PhotoGroup;
+use App\Jobs\PhotoVK;
 use App\Jobs\Video;
 use App\Models\SyncUserTelegramChannels;
 use App\Models\TmpPhotoGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Classes\Telegram;
+use App\Classes\Vkontakte;
 Use App\Models\WebHookHistory;
 use App\Models\WebHookUserHistory;
 use App\Models\UserTelegramChannels;
@@ -18,27 +20,66 @@ use Log;
 use Carbon\Carbon;
 class TelegramController extends Controller
 {
-   public function test(){
+   public function vkPhotos(){
 
+      // Vkontakte()
 
    }
    public function index(){
        $user = User::find(1);
        $mediaGroup = TmpPhotoGroup::find(51);
-       $telegram = new Telegram($user->telegram_token);
-       $telegram->setMethod('sendVideo');
-       $telegram->setCaption($mediaGroup->caption);
-       $telegram->setChatId($mediaGroup->channel_id);
-       $telegram->setParams(['chat_id'=>$mediaGroup->channel_id]);
-       $telegram->setVideo(env('APP_URL').'/storage/'.$mediaGroup->media_group_id);
+       $channel = TelegramChannels::where('channel_id','-1001612955556')->first();
+       $name = '7107.jpg';
 
-       $telegram->sendVideo();
-
-       $mediaGroup->delete();
-
-       if(TmpPhotoGroup::where('media_group_id',$mediaGroup->media_group_id)->count() == 0 ){
-           unlink(storage_path() . '/app/public/' .$mediaGroup->media_group_id);
+       $caption = '';
+       if(isset($req['channel_post']['caption'])){
+           $caption = $req['channel_post']['caption'];
        }
+       foreach($channel->userSyncChannels as $channelItam) {
+
+           foreach ($channelItam->userChannel as $userChannel) {
+
+               $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                   ->whereMediaGroupId($name)
+                   ->whereChannelId($userChannel->channel_id)
+                   ->get();
+
+               if($item->count() == 0){
+                   $tmpGroup = TmpPhotoGroup::create([
+                       'user_id'=>$userChannel->user->id,
+                       'media_group_id'=>$name,
+                       'channel_id'=>$userChannel->channel_id,
+                       'caption'=>$caption
+                   ]);
+
+                   dispatch(new Photo($tmpGroup));
+               }
+           }
+       }
+
+       foreach($channel->userSyncAlbums as $channelItam) {
+
+           foreach ($channelItam->userAlbums as $userChannel) {
+
+               $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                   ->whereMediaGroupId($name)
+                   ->whereChannelId($userChannel->album_id)
+                   ->get();
+
+               if($item->count() == 0){
+                   $tmpGroup = TmpPhotoGroup::create([
+                       'user_id'=>$userChannel->user->id,
+                       'media_group_id'=>$name,
+                       'channel_id'=>$userChannel->album_id,
+                       'caption'=>''
+                   ]);
+
+                   dispatch(new PhotoVK($tmpGroup));
+               }
+           }
+       }
+
+
    }
 
    public function hook(){
@@ -117,6 +158,9 @@ class TelegramController extends Controller
                }
            }
 
+
+
+
            return response(200);
        }
 
@@ -136,13 +180,14 @@ class TelegramController extends Controller
            file_put_contents($localPath, file_get_contents($photoUrl));
 
            $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
+
            $caption = '';
            if(isset($req['channel_post']['caption'])){
                $caption = $req['channel_post']['caption'];
            }
-           foreach($channel->userSyncChannels as $channel) {
+           foreach($channel->userSyncChannels as $channelItem) {
 
-               foreach ($channel->userChannel as $userChannel) {
+               foreach ($channelItem->userChannel as $userChannel) {
 
                    $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
                        ->whereMediaGroupId($name)
@@ -161,6 +206,31 @@ class TelegramController extends Controller
                    }
                }
            }
+
+           foreach($channel->userSyncAlbums as $channelItem) {
+
+               foreach ($channelItem->userAlbums as $userChannel) {
+
+                   $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                       ->whereMediaGroupId($name)
+                       ->whereChannelId($userChannel->album_id)
+                       ->get();
+
+                   if($item->count() == 0){
+                       $tmpGroup = TmpPhotoGroup::create([
+                           'user_id'=>$userChannel->user->id,
+                           'media_group_id'=>$name,
+                           'channel_id'=>$userChannel->album_id,
+                           'caption'=>''
+                       ]);
+
+                       dispatch(new PhotoVK($tmpGroup));
+                   }
+               }
+           }
+
+
+
 
            return response(200);
        }
@@ -188,9 +258,9 @@ class TelegramController extends Controller
 
            $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
 
-           foreach($channel->userSyncChannels as $channel) {
+           foreach($channel->userSyncChannels as $channelItem) {
 
-               foreach ($channel->userChannel as $userChannel) {
+               foreach ($channelItem->userChannel as $userChannel) {
 
                    $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
                        ->whereMediaGroupId($req['channel_post']['media_group_id'])
@@ -205,6 +275,32 @@ class TelegramController extends Controller
                        ]);
 
                        dispatch(new PhotoGroup($tmpGroup))->delay(Carbon::now()->addSeconds(10));
+                   }
+               }
+           }
+
+
+
+           foreach($channel->userSyncAlbums as $channelItem) {
+
+               foreach ($channelItem->userAlbums as $userChannel) {
+
+                   $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                       ->whereMediaGroupId($req['channel_post']['media_group_id'])
+                       ->whereChannelId($userChannel->album_id)
+                       ->whereFilePath($name)
+                       ->get();
+
+                   if($item->count() == 0){
+                       $tmpGroup = TmpPhotoGroup::create([
+                           'user_id'=>$userChannel->user->id,
+                           'media_group_id'=>$req['channel_post']['media_group_id'],
+                           'file_path'=>$name,
+                           'channel_id'=>$userChannel->album_id,
+                           'caption'=>''
+                       ]);
+
+                       dispatch(new PhotoVK($tmpGroup));
                    }
                }
            }
@@ -242,7 +338,7 @@ class TelegramController extends Controller
             ]);
        if(isset($req['my_chat_member']['new_chat_member']['status'])) {
            if ($req['my_chat_member']['new_chat_member']['status'] == 'administrator') {
-               Log::info("STATUS ISSET^ ".$req['my_chat_member']['new_chat_member']['status']);
+               //Log::info("STATUS ISSET^ ".$req['my_chat_member']['new_chat_member']['status']);
                UserTelegramChannels::create(
                    [
                        'user_id' => $user->id,

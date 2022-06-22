@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class TmpPhotoGroup extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','media_group_id','channel_id','caption'];
+    protected $fillable = ['user_id','media_group_id','channel_id','caption','file_path'];
     /**
      * The table associated with the model.
      *

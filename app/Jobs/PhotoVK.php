@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Classes\Telegram;
+use App\Classes\Vkontakte;
 use App\Models\TmpPhotoGroup;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -11,9 +11,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Storage;
-
-class PhotoGroup implements ShouldQueue
+//use Log;
+class PhotoVK implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $mediaGroup;
@@ -34,32 +33,26 @@ class PhotoGroup implements ShouldQueue
      */
     public function handle()
     {
-        $files = scandir(storage_path().'/app/public/'.$this->mediaGroup->media_group_id);
-
         $user = User::find($this->mediaGroup->user_id);
 
-        $telegram = new Telegram($user->telegram_token);
-        $telegram->setMethod('sendMediaGroup');
-        $telegram->setCaption($this->mediaGroup->caption);
-        $telegram->setChatId($this->mediaGroup->channel_id);
-        $telegram->setParams(['chat_id'=> $this->mediaGroup->channel_id]);
-
-        foreach($files as $image){
-            if($image != '.' && $image != '..') {
-                $dataSendFiles[] = [
-                    'type'=>"photo",
-                    'media'=> env('APP_URL').'/storage/'.$this->mediaGroup->media_group_id.'/'.$image,
-                ];
-            }
+        $vk = new Vkontakte(['access_token' => $user->vk_token]);
+        $albumParse = explode('_',$this->mediaGroup->channel_id);
+        if($this->mediaGroup->media_group_id != null && $this->mediaGroup->file_path == null) {
+            $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/' . $this->mediaGroup->media_group_id);
+            //Log::info('POSTED ONE PHOTO');
+        }else{
+            $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/' . $this->mediaGroup->media_group_id.'/'.$this->mediaGroup->file_path);
+            //Log::info('POSTED ONE PHOTO FROM GALLERY');
         }
-        $telegram->setPhotoGroup($dataSendFiles);
-
-        $telegram->sendImageGroup();
 
         $deleteMediaGroupId = $this->mediaGroup->media_group_id;
         $this->mediaGroup->delete();
 
-        if(TmpPhotoGroup::where('media_group_id',$deleteMediaGroupId)->count() == 0 ){
+        if($this->mediaGroup->media_group_id != null && $this->mediaGroup->file_path == null) {
+            if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() == 0) {
+                unlink(storage_path() . '/app/public/' . $deleteMediaGroupId);
+            }
+        }else{
             $this->removeFolder(storage_path() . '/app/public/' .$deleteMediaGroupId);
         }
 
@@ -86,4 +79,5 @@ class PhotoGroup implements ShouldQueue
         rmdir($folderName);
         return true;
     }
+
 }
