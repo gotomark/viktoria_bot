@@ -45,8 +45,14 @@ class User extends Authenticatable
     public function userChannels(){
         return $this->hasMany( 'App\Models\UserTelegramChannels', 'user_id','id');
     }
+    public function userAlbums(){
+        return $this->hasMany( 'App\Models\UserVkontakteAlbum', 'user_id','id');
+    }
     public function syncTelegramChannels(){
         return $this->hasMany( 'App\Models\SyncUserTelegramChannels', 'user_id','id');
+    }
+    public function syncAlbums(){
+        return $this->hasMany( 'App\Models\SyncUserVkontakteAlbumChannels', 'user_id','id');
     }
 
     public function isAdmin(){

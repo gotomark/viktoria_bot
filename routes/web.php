@@ -17,11 +17,20 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-Route::get('/home', [\App\Http\Controllers\HomeController::class,'index'])->name('user.home');
+//Route::get('/test', [\App\Http\Controllers\TelegramController::class,'index']);
+
+Route::get('/vkontakte-sync', [\App\Http\Controllers\HomeController::class,'vkontakteSync'])->name('user.vkontakte-sync');
+Route::post('/update-sync-vkontakte', [\App\Http\Controllers\HomeController::class,'updateSyncVkontakte'])->name('user.update.sync-vkontakte');
+Route::get('/delete-album/{userVkontakteAlbum}', [\App\Http\Controllers\HomeController::class,'deleteAlbum'])->name('user.delete.album');
+Route::post('/store-album', [\App\Http\Controllers\HomeController::class,'storeAlbum'])->name('user.store.album');
+
+
+Route::get('/telegram-sync', [\App\Http\Controllers\HomeController::class,'telegramSync'])->name('user.telegram-sync');
 Route::post('/hook-main-bot', [\App\Http\Controllers\TelegramController::class,'hook']);
 Route::post('/user/{user}', [\App\Http\Controllers\TelegramController::class,'hookUser']);
 Route::post('/update-user', [\App\Http\Controllers\HomeController::class,'updateUser'])->name('user.update.token');
 Route::post('/update-sync-channels', [\App\Http\Controllers\HomeController::class,'updateSyncChannels'])->name('user.update.sync-channels');
+
 
 
 
