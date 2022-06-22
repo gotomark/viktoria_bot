@@ -122,7 +122,7 @@ class TelegramController extends Controller
            if(isset($filePath->result->file_path)){
                 $videoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
            }else{
-               Log::info($filePath);
+               //Log::info($filePath);
                exit;
            }
 
