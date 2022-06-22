@@ -91,25 +91,26 @@ class TelegramController extends Controller
            'json_data'=>json_encode(request()->all())
        ]);
 
-       /* if(isset($req['channel_post']['text'])){
-           Log::info('TYPE TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$req['channel_post']['chat']['id']);
+      if(isset($req['channel_post']['text'])){
+          /*
+          Log::info('TYPE TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$req['channel_post']['chat']['id']);
 
-           $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
+          $channel = TelegramChannels::where('channel_id',$req['channel_post']['chat']['id'])->first();
 
-           foreach($channel->userSyncChannels as $channel){
+          foreach($channel->userSyncChannels as $channel){
 
-               foreach($channel->userChannel as $userChannel){
-                   Log::info('REPLY TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$userChannel->channel_id);
-                   $telegram = new Telegram($userChannel->user->telegram_token);
-                   $telegram->setMethod('sendMessage');
-                   $telegram->setParams(['chat_id'=>$userChannel->channel_id,'text'=>$req['channel_post']['text']]);
-                   $telegram->sendMessage();
-               }
-           }
-
+              foreach($channel->userChannel as $userChannel){
+                  Log::info('REPLY TEXT: '.$req['channel_post']['text'].' - CHAT ID: '.$userChannel->channel_id);
+                  $telegram = new Telegram($userChannel->user->telegram_token);
+                  $telegram->setMethod('sendMessage');
+                  $telegram->setParams(['chat_id'=>$userChannel->channel_id,'text'=>$req['channel_post']['text']]);
+                  $telegram->sendMessage();
+              }
+          }
+*/
            return response(200);
         }
-        */
+
        if(isset($req['channel_post']['video'])){
 
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
