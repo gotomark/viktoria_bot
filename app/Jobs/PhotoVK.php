@@ -46,18 +46,19 @@ class PhotoVK implements ShouldQueue
         }
 
         $deleteMediaGroupId = $this->mediaGroup->media_group_id;
-        $this->mediaGroup->delete();
+
 
         if($this->mediaGroup->media_group_id != null && $this->mediaGroup->file_path == null) {
-            if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() == 0) {
+            if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() <= 1) {
                 unlink(storage_path() . '/app/public/' . $deleteMediaGroupId);
             }
         }else{
-            if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() == 0) {
+            if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() <= 1 ) {
                 $this->removeFolder(storage_path() . '/app/public/' . $deleteMediaGroupId);
             }
         }
 
+        $this->mediaGroup->delete();
 
     }
 
