@@ -119,6 +119,7 @@ class HomeController extends Controller
                 }
             }
         }
+
         return redirect(route('user.telegram-sync'));
 
     }

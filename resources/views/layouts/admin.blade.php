@@ -50,7 +50,7 @@
         App.init();
         $('#add_row').click(function () {
             var index = $('.row-sync').length;
-            var insertRow = add_row(index);
+            var insertRow = add_row(index + 1);
 
             $('.row-sync:last').after(insertRow);
 
