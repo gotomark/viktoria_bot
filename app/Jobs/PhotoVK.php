@@ -37,7 +37,8 @@ class PhotoVK implements ShouldQueue
 
         $vk = new Vkontakte(['access_token' => $user->vk_token]);
         $albumParse = explode('_',$this->mediaGroup->channel_id);
-        if($this->mediaGroup->media_group_id != null && $this->mediaGroup->file_path == null) {
+
+        if($this->mediaGroup->media_group_id != '' && $this->mediaGroup->file_path == '') {
             $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/' . $this->mediaGroup->media_group_id);
             //Log::info('POSTED ONE PHOTO');
         }else{
@@ -48,13 +49,13 @@ class PhotoVK implements ShouldQueue
         $deleteMediaGroupId = $this->mediaGroup->media_group_id;
 
 
-        if($this->mediaGroup->media_group_id != null && $this->mediaGroup->file_path == null) {
+        if($this->mediaGroup->media_group_id != '' && $this->mediaGroup->file_path == '') {
             if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() <= 1) {
-                unlink(storage_path() . '/app/public/' . $deleteMediaGroupId);
+                //unlink(storage_path() . '/app/public/' . $deleteMediaGroupId);
             }
         }else{
             if (TmpPhotoGroup::where('media_group_id', $deleteMediaGroupId)->count() <= 1 ) {
-                $this->removeFolder(storage_path() . '/app/public/' . $deleteMediaGroupId);
+                //$this->removeFolder(storage_path() . '/app/public/' . $deleteMediaGroupId);
             }
         }
 
