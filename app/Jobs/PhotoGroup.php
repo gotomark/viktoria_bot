@@ -57,12 +57,13 @@ class PhotoGroup implements ShouldQueue
         $telegram->sendImageGroup();
 
         $deleteMediaGroupId = $this->mediaGroup->media_group_id;
-        $this->mediaGroup->delete();
 
-        if(TmpPhotoGroup::where('media_group_id',$deleteMediaGroupId)->count() == 0 ){
+
+        if(TmpPhotoGroup::where('media_group_id',$deleteMediaGroupId)->count() <= 1 ){
             $this->removeFolder(storage_path() . '/app/public/' .$deleteMediaGroupId);
         }
 
+        $this->mediaGroup->delete();
 
     }
 
