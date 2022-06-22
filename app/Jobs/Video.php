@@ -43,11 +43,12 @@ class Video implements ShouldQueue
         $telegram->setVideo(env('APP_URL').'/storage/'.$this->mediaGroup->media_group_id);
         $telegram->sendVideo();
 
-        $this->mediaGroup->delete();
 
-        if(TmpPhotoGroup::where('media_group_id',$this->mediaGroup->media_group_id)->count() == 0 ){
-            unlink(storage_path() . '/app/public/' .$this->mediaGroup->media_group_id);
+
+        if(TmpPhotoGroup::where('media_group_id',$this->mediaGroup->media_group_id)->count() <= 1 ){
+            //unlink(storage_path() . '/app/public/' .$this->mediaGroup->media_group_id);
         }
+        $this->mediaGroup->delete();
     }
 
 
