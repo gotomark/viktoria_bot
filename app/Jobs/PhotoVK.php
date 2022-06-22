@@ -62,7 +62,10 @@ class PhotoVK implements ShouldQueue
         $this->mediaGroup->delete();
 
     }
-
+    public function retryUntil()
+    {
+        return now()->addSeconds(30);
+    }
     function removeFolder($folderName) {
         if (is_dir($folderName))
             $folderHandle = opendir($folderName);
