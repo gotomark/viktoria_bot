@@ -332,11 +332,7 @@ class TelegramController extends Controller
 
    public function hookUser(User $user){
         $req = request()->all();
-        WebHookUserHistory::create(
-            [
-                'json_data'=>json_encode(request()->all()),
-                'user_id'=>$user->id
-            ]);
+
        if(isset($req['my_chat_member']['new_chat_member']['status'])) {
            if ($req['my_chat_member']['new_chat_member']['status'] == 'administrator') {
                //Log::info("STATUS ISSET^ ".$req['my_chat_member']['new_chat_member']['status']);
@@ -347,12 +343,22 @@ class TelegramController extends Controller
                        'title' => $req['my_chat_member']['chat']['title'],
                    ]
                );
+               WebHookUserHistory::create(
+                   [
+                       'json_data'=>json_encode(request()->all()),
+                       'user_id'=>$user->id
+                   ]);
            } else {
                $userChannel = UserTelegramChannels::where('channel_id',$req['my_chat_member']['chat']['id'])->first();
                if($userChannel) {
                    SyncUserTelegramChannels::where('user_telegram_channel_id', $userChannel->id)->delete();
                $userChannel->delete();
                }
+               WebHookUserHistory::create(
+                   [
+                       'json_data'=>json_encode(request()->all()),
+                       'user_id'=>$user->id
+                   ]);
            }
        }
        return response(200);
