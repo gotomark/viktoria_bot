@@ -434,7 +434,7 @@ class Vkontakte
             $uploadURL = $response->upload_url;
 
 
-            exec("curl -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
+            exec("curl --max-time 15 -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
 
             $response = json_decode($output[0]);
 
