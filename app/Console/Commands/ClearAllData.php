@@ -32,13 +32,13 @@ class ClearAllData extends Command
 
         foreach ($tmp as $item) {
             if($item->file_path != '') {
+                //$this->line('Folder: '. storage_path() . '/app/public/' . $item->media_group_id);
                 $this->removeFolder(storage_path() . '/app/public/' . $item->media_group_id);
             }else{
+                //$this->line('File: '.storage_path() . '/app/public/' . $item->media_group_id);
                 unlink(storage_path() . '/app/public/' .$item->media_group_id);
             }
-            die();
         }
-
         $tmp->truncate();
 
     }
