@@ -200,7 +200,7 @@ class TelegramController extends Controller
                            'user_id'=>$userChannel->user->id,
                            'media_group_id'=>$name,
                            'channel_id'=>$userChannel->channel_id,
-                           'caption'=>$caption
+                           'caption'=>$userChannel->user->flag_caption == 1 ? $caption : ''
                        ]);
 
                        dispatch(new Photo($tmpGroup));
@@ -262,7 +262,10 @@ class TelegramController extends Controller
            foreach($channel->userSyncChannels as $channelItem) {
 
                foreach ($channelItem->userChannel as $userChannel) {
-
+                   $caption = '';
+                   if(isset($req['channel_post']['caption'])){
+                       $caption = $req['channel_post']['caption'];
+                   }
                    $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
                        ->whereMediaGroupId($req['channel_post']['media_group_id'])
                        ->whereChannelId($userChannel->channel_id)
@@ -273,6 +276,7 @@ class TelegramController extends Controller
                            'user_id'=>$userChannel->user->id,
                            'media_group_id'=>$req['channel_post']['media_group_id'],
                            'channel_id'=>$userChannel->channel_id,
+                           'caption'=>$userChannel->user->flag_caption == 1 ? $caption : '',
                        ]);
 
                        dispatch(new PhotoGroup($tmpGroup))->delay(Carbon::now()->addSeconds(10));
