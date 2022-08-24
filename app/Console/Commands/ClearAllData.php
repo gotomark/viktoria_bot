@@ -32,7 +32,7 @@ class ClearAllData extends Command
         $tmp = TmpPhotoGroup::all();
 
         foreach ($tmp as $item) {
-            if($item->file_path != null) {
+            if($item->file_path != null || $item->file_path != '') {
                // $this->line('Folder: '. storage_path() . '/app/public/' . $item->media_group_id);
                 $this->removeFolder(storage_path() . '/app/public/' . $item->media_group_id);
             }else{
