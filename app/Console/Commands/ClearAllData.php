@@ -28,7 +28,6 @@ class ClearAllData extends Command
      */
     public function handle()
     {
-        $this->removeFolder(storage_path() . '/app/public/13281682125321228');
         $tmp = TmpPhotoGroup::all();
 
         foreach ($tmp as $item) {
