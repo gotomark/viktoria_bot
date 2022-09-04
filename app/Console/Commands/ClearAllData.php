@@ -49,7 +49,7 @@ class ClearAllData extends Command
         if (is_dir($folderName))
             $folderHandle = opendir($folderName);
 
-        if (!$folderHandle)
+        if (!isset($folderHandle))
             return false;
 
         while($file = readdir($folderHandle)) {
