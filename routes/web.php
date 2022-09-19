@@ -17,6 +17,12 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::get('/home', function () {
+    return redirect('user.telegram-sync');
+});
+
+
+
 //Route::get('/test', [\App\Http\Controllers\TelegramController::class,'index']);
 
 Route::get('/vkontakte-sync', [\App\Http\Controllers\HomeController::class,'vkontakteSync'])->name('user.vkontakte-sync');
