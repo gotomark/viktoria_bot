@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return redirect('user.telegram-sync');
+    return redirect(route('user.telegram-sync'));
 });
 
 
