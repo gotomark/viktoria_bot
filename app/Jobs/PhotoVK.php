@@ -64,7 +64,7 @@ class PhotoVK implements ShouldQueue
     }
     public function retryUntil()
     {
-        return now()->addSeconds(30);
+        return now()->addSeconds(60);
     }
     function removeFolder($folderName) {
         if (is_dir($folderName))

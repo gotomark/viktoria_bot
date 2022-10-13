@@ -69,7 +69,7 @@ class PhotoGroup implements ShouldQueue
 
     public function retryUntil()
     {
-        return now()->addSeconds(30);
+        return now()->addSeconds(60);
     }
 
     function removeFolder($folderName) {
