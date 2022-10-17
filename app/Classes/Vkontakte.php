@@ -295,7 +295,7 @@ class Vkontakte
         $url = 'https://api.vk.com/method/' . $method . '?' . $q . 'access_token=' . $this->accessToken->access_token;
 
         if($method == 'photos.save') {
-           // dd($url);
+            //dd($url);
         }
 
         $result = json_decode($this->curl($url));
@@ -431,7 +431,7 @@ class Vkontakte
     {
 
         $response = $this->api('photos.getUploadServer', [
-            'group_id' => -$publicID,
+            'group_id' => $publicID,
             'album_id' => $albumID,
         ]);
         $output = [];
