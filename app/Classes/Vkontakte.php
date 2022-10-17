@@ -275,7 +275,7 @@ class Vkontakte
     {
         /* Generate query string from array */
         $parameters = array();
-        $query['v'] = '5.126';
+        $query['v'] = '5.131';
         foreach ($query as $param => $value) {
             $q = $param . '=';
             if (is_array($value)) {
@@ -293,8 +293,13 @@ class Vkontakte
             $q .= '&'; // Add "&" sign for access_token if query exists
         }
         $url = 'https://api.vk.com/method/' . $method . '?' . $q . 'access_token=' . $this->accessToken->access_token;
+
+        if($method == 'photos.save') {
+           // dd($url);
+        }
+
         $result = json_decode($this->curl($url));
-//var_dump( $result); die();
+
         if (isset($result->response)) {
 
             return $result->response;
@@ -426,28 +431,40 @@ class Vkontakte
     {
 
         $response = $this->api('photos.getUploadServer', [
-            'group_id' => $publicID,
+            'group_id' => -$publicID,
             'album_id' => $albumID,
         ]);
         $output = [];
+
         if(!isset($response->error)){
             $uploadURL = $response->upload_url;
 
+           // exec("curl  -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
 
-            exec("curl --max-time 15 -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
+            $curl = curl_init($uploadURL);
+            curl_setopt_array($curl, array(
+                CURLOPT_POST => TRUE,
+                CURLOPT_RETURNTRANSFER => TRUE,
+                CURLOPT_POSTFIELDS => array(
+                    'photo' => curl_file_create($fullServerPathToImage),
+                ),
+            ));
+            $output = curl_exec($curl);
+            if (curl_errno($curl)) {
+                echo "cURL error: ", curl_error($curl);
+            }
 
-            $response = json_decode($output[0]);
+            curl_close($curl);
 
+            $response = json_decode($output,true );
 
             $response = $this->api('photos.save', [
                 'album_id' => $albumID,
-                'group_id' => $publicID,
-                'photos_list' => $response->photos_list,
-                'server' => $response->server,
-                'hash' => $response->hash,
+               // 'group_id' => -$publicID,
+                'photos_list' => $response['photos_list'],
+                'server' => $response['server'],
+                'hash' => $response['hash'],
             ]);
-
-
 
 
             return isset($response[0]);

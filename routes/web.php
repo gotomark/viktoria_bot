@@ -17,13 +17,13 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+
+//Route::get('/test', [\App\Http\Controllers\TelegramController::class,'vkPhotos']);
+
 Route::get('/home', function () {
     return redirect(route('user.telegram-sync'));
 });
 
-
-
-//Route::get('/test', [\App\Http\Controllers\TelegramController::class,'index']);
 
 Route::get('/vkontakte-sync', [\App\Http\Controllers\HomeController::class,'vkontakteSync'])->name('user.vkontakte-sync');
 Route::post('/update-sync-vkontakte', [\App\Http\Controllers\HomeController::class,'updateSyncVkontakte'])->name('user.update.sync-vkontakte');

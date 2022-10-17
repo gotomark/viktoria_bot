@@ -39,6 +39,7 @@ class PhotoVK implements ShouldQueue
         $albumParse = explode('_',$this->mediaGroup->channel_id);
 
         if($this->mediaGroup->media_group_id != '' && $this->mediaGroup->file_path == '') {
+
             $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/' . $this->mediaGroup->media_group_id);
             //Log::info('POSTED ONE PHOTO');
         }else{
@@ -60,6 +61,8 @@ class PhotoVK implements ShouldQueue
         }
 
         $this->mediaGroup->delete();
+
+        return true;
 
     }
     public function retryUntil()
