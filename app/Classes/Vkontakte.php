@@ -413,13 +413,13 @@ class Vkontakte
 
 
         $response = $this->api('wall.post',
-            [
-                'owner_id' => -$publicID,
-                'from_group' => 1,
-                'message' => "$text",
-                'attachments' => "photo{$response[0]->owner_id}_{$response[0]->id}", // uploaded image is passed as attachment
-                'v'=> '5.126'
-            ]);
+                               [
+                                   'owner_id' => -$publicID,
+                                   'from_group' => 1,
+                                   'message' => "$text",
+                                   'attachments' => "photo{$response[0]->owner_id}_{$response[0]->id}", // uploaded image is passed as attachment
+                                   'v'=> '5.126'
+                               ]);
 
 
 
@@ -439,7 +439,7 @@ class Vkontakte
         if(!isset($response->error)){
             $uploadURL = $response->upload_url;
 
-           // exec("curl  -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
+            // exec("curl  -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
 
             $curl = curl_init($uploadURL);
             curl_setopt_array($curl, array(
@@ -460,7 +460,7 @@ class Vkontakte
 
             $response = $this->api('photos.save', [
                 'album_id' => $albumID,
-               // 'group_id' => -$publicID,
+                'group_id' => $publicID,
                 'photos_list' => $response['photos_list'],
                 'server' => $response['server'],
                 'hash' => $response['hash'],
