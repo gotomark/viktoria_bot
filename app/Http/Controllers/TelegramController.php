@@ -250,7 +250,7 @@ class TelegramController extends Controller
            $dir = storage_path() . '/app/public/' . $req['channel_post']['media_group_id'];
 
            if(!is_dir($dir)) {
-               mkdir($dir);
+               mkdir($dir, 0755, true);
            }
 
            $localPath = $dir.'/'.$name;
