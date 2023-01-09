@@ -57,7 +57,7 @@ class TelegramController extends Controller
            }
        }
 
-       /*foreach($channel->userSyncAlbums as $channelItam) {
+       foreach($channel->userSyncAlbums as $channelItam) {
 
            foreach ($channelItam->userAlbums as $userChannel) {
 
@@ -77,7 +77,7 @@ class TelegramController extends Controller
                    dispatch(new PhotoVK($tmpGroup));
                }
            }
-       }*/
+       }
 
 
    }
@@ -208,7 +208,7 @@ class TelegramController extends Controller
                }
            }
 
-          /* foreach($channel->userSyncAlbums as $channelItem) {
+           foreach($channel->userSyncAlbums as $channelItem) {
 
                foreach ($channelItem->userAlbums as $userChannel) {
 
@@ -228,7 +228,7 @@ class TelegramController extends Controller
                        dispatch(new PhotoVK($tmpGroup));
                    }
                }
-           } */
+           }
 
 
 
@@ -285,7 +285,7 @@ class TelegramController extends Controller
            }
 
 
-/*
+
            foreach($channel->userSyncAlbums as $channelItem) {
 
                foreach ($channelItem->userAlbums as $userChannel) {
@@ -309,7 +309,7 @@ class TelegramController extends Controller
                    }
                }
            }
-*/
+
            return response(200);
        }
 
