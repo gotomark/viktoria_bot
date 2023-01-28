@@ -435,7 +435,7 @@ class Vkontakte
             'album_id' => $albumID,
         ]);
         $output = [];
-
+dd($response);
         if(!isset($response->error)){
             $uploadURL = $response->upload_url;
 

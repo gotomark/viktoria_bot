@@ -25,6 +25,8 @@ Route::get('/home', function () {
 });
 
 
+Route::get('/test', [\App\Http\Controllers\TelegramController::class,'vkPhotos']);
+
 Route::get('/vkontakte-sync', [\App\Http\Controllers\HomeController::class,'vkontakteSync'])->name('user.vkontakte-sync');
 Route::post('/update-sync-vkontakte', [\App\Http\Controllers\HomeController::class,'updateSyncVkontakte'])->name('user.update.sync-vkontakte');
 Route::get('/delete-album/{userVkontakteAlbum}', [\App\Http\Controllers\HomeController::class,'deleteAlbum'])->name('user.delete.album');
