@@ -438,7 +438,7 @@ class Vkontakte
 
         if(!isset($response->error)){
             $uploadURL = $response->upload_url;
-
+var_dump($uploadURL);
             // exec("curl  -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
 
             $curl = curl_init($uploadURL);
