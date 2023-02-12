@@ -218,28 +218,28 @@ class TelegramController extends Controller
                    }
                }
            }
+           /*
+                      foreach($channel->userSyncAlbums as $channelItem) {
 
-           foreach($channel->userSyncAlbums as $channelItem) {
+                          foreach ($channelItem->userAlbums as $userChannel) {
 
-               foreach ($channelItem->userAlbums as $userChannel) {
+                              $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
+                                  ->whereMediaGroupId($name)
+                                  ->whereChannelId($userChannel->album_id)
+                                  ->get();
 
-                   $item = TmpPhotoGroup::whereUserId($userChannel->user->id)
-                       ->whereMediaGroupId($name)
-                       ->whereChannelId($userChannel->album_id)
-                       ->get();
+                              if($item->count() == 0){
+                                  $tmpGroup = TmpPhotoGroup::create([
+                                      'user_id'=>$userChannel->user->id,
+                                      'media_group_id'=>$name,
+                                      'channel_id'=>$userChannel->album_id,
+                                      'caption'=>''
+                                  ]);
 
-                   if($item->count() == 0){
-                       $tmpGroup = TmpPhotoGroup::create([
-                           'user_id'=>$userChannel->user->id,
-                           'media_group_id'=>$name,
-                           'channel_id'=>$userChannel->album_id,
-                           'caption'=>''
-                       ]);
-
-                       dispatch(new PhotoVK($tmpGroup));
-                   }
-               }
-           }
+                                  dispatch(new PhotoVK($tmpGroup));
+                              }
+                          }
+                      } */
 
 
 
@@ -296,7 +296,7 @@ class TelegramController extends Controller
            }
 
 
-
+/*
            foreach($channel->userSyncAlbums as $channelItem) {
 
                foreach ($channelItem->userAlbums as $userChannel) {
@@ -319,7 +319,7 @@ class TelegramController extends Controller
                        dispatch(new PhotoVK($tmpGroup))->delay(Carbon::now()->addSeconds(10));
                    }
                }
-           }
+           } */
 
            return response(200);
        }
