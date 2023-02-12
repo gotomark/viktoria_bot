@@ -438,7 +438,7 @@ class Vkontakte
 
         if(!isset($response->error)){
             $uploadURL = $response->upload_url;
-dd($uploadURL);
+
             // exec("curl  -X POST -F 'photo=@$fullServerPathToImage' '$uploadURL'", $output);
 
             $curl = curl_init($uploadURL);
@@ -457,7 +457,7 @@ dd($uploadURL);
             curl_close($curl);
 
             $response = json_decode($output,true );
-
+dd($response);
             $response = $this->api('photos.save', [
                 'album_id' => $albumID,
                 'group_id' => $publicID,
