@@ -453,7 +453,7 @@ class Vkontakte
             if (curl_errno($curl)) {
                 echo "cURL error: ", curl_error($curl);
             }
-            dd($output);
+
             curl_close($curl);
 
             $response = json_decode($output,true );
@@ -466,7 +466,7 @@ class Vkontakte
                 'hash' => $response['hash'],
             ]);
 
-
+var_dump($response);
             return isset($response[0]);
         }
         return false;

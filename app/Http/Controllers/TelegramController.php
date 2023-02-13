@@ -27,7 +27,7 @@ class TelegramController extends Controller
        $vk = new Vkontakte(['access_token' => 'vk1.a.-A81xkAo7bPpm6vnMQaNkk8c8fTKlfk8vBr8SYHcyiQFHNV6-8YjKj4CqOEcUT1Jl2Bp1Aa8RC1tmCRH-69rcFf4qyYV58dP4ZP_96KkEnyy41s8koUB6O-WSTJU1evBaiIwgP6itL0GNjGJbUpVvml_ch4l4FXaeayAsBn7XknvVg7hBORry_xRIygRi6Ib']);
        $albumParse = explode('_','187183257_283614336');
 
-       $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/44205.jpg');
+       $vk->postToPublicAlbum($albumParse[0], $albumParse[1], storage_path() . '/app/public/35069.jpg');
 
 
 
