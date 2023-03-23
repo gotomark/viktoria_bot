@@ -466,7 +466,7 @@ class Vkontakte
                 'hash' => $response['hash'],
             ]);
 
-var_dump($response);
+//var_dump($response);
             return isset($response[0]);
         }
         return false;
