@@ -235,8 +235,9 @@ class TelegramController extends Controller
                                       'channel_id'=>$userChannel->album_id,
                                       'caption'=>''
                                   ]);
-
+if(env('VK_SEND') == 1) {
                                   dispatch(new PhotoVK($tmpGroup));
+}
                               }
                           }
                       }
@@ -315,8 +316,9 @@ class TelegramController extends Controller
                            'channel_id'=>$userChannel->album_id,
                            'caption'=>''
                        ]);
-
+if(env('VK_SEND') == 1) {
                        dispatch(new PhotoVK($tmpGroup))->delay(Carbon::now()->addSeconds(10));
+}
                    }
                }
            }
