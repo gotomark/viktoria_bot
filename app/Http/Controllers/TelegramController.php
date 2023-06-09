@@ -162,7 +162,8 @@ class TelegramController extends Controller
                            'user_id'=>$userChannel->user->id,
                            'media_group_id'=>$name,
                            'channel_id'=>$userChannel->channel_id,
-                           'caption'=>$caption
+                          // 'caption'=>$caption,
+                           'caption'=>''
                        ]);
 
                        dispatch(new Video($tmpGroup));
@@ -211,7 +212,8 @@ class TelegramController extends Controller
                            'user_id'=>$userChannel->user->id,
                            'media_group_id'=>$name,
                            'channel_id'=>$userChannel->channel_id,
-                           'caption'=>$userChannel->user->flag_caption == 1 ? $caption : ''
+                           //'caption'=>$userChannel->user->flag_caption == 1 ? $caption : ''
+                            'caption'=>''
                        ]);
 
                        dispatch(new Photo($tmpGroup));
