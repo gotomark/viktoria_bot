@@ -139,7 +139,7 @@ class TelegramController extends Controller
            }
 
 
-           $name = rand(0,100000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
+           $name = rand(0,1000000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
            $localPath = storage_path().'/app/public/'.$name;
            file_put_contents($localPath, file_get_contents($videoUrl));
 
@@ -188,7 +188,7 @@ class TelegramController extends Controller
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
 
            $photoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
-           $name = rand(0,100000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
+           $name = rand(0,1000000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
            $localPath = storage_path().'/app/public/'.$name;
            file_put_contents($localPath, file_get_contents($photoUrl));
 
@@ -260,7 +260,7 @@ if(env('VK_SEND') == 1) {
            $telegram = new Telegram(config('services.telegram-bot-api.token'));
 
            $photoUrl = $telegram->getUrlPhoto($filePath->result->file_path);
-           $name = rand(0,100000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
+           $name = rand(0,1000000).'.'.pathinfo($filePath->result->file_path, PATHINFO_EXTENSION);
            $dir = storage_path() . '/app/public/' . $req['channel_post']['media_group_id'];
 
            if(!is_dir($dir)) {
